@@ -5,8 +5,15 @@ const {
   formatComments,
 } = require('../db/utils/utils');
 
-describe('formatDates', () => {});
+describe('formatDates', () => {
+  it('returns an empty array when passed an array', () => {
+    expect(formatDates([])).to.eql([]);
+  });
+  it('returns an array with the sql timestamp changed to js when passed an array', () => {
+    const input = 
+  });
+});
 
-describe('makeRefObj', () => {});
+describe('makeRefObj', () => { });
 
-describe('formatComments', () => {});
+describe('formatComments', () => { });
