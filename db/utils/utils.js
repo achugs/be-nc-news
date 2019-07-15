@@ -18,7 +18,6 @@ exports.formatComments = (comments, articleRef) => {
     obj.author = created_by;
     obj.article_id = articleRef[belongs_to];
     obj.created_at = new Date(created_at);
-    console.log(new Date(created_at))
     return obj;
   });
 };
