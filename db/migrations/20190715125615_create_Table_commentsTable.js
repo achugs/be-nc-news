@@ -10,6 +10,6 @@ exports.up = function (connection, Promise) {
   })
 };
 
-exports.down = function (connection, Promise) {
-
+exports.down = (connection, Promise) => {
+  return connection.schema.dropTable('comments');
 };

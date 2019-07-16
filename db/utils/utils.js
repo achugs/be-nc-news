@@ -7,7 +7,7 @@ exports.formatDates = list => {
 
 exports.makeRefObj = list => {
   const obj = {};
-  list.forEach(id => (obj[id.title] = id.article_id))
+  list.forEach(id => obj[id.title] = id.article_id)
   return obj;
 };
 

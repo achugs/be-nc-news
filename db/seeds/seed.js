@@ -14,7 +14,8 @@ exports.seed = function (connection) {
     return Promise.all([topicsInsertions, usersInsertions])
       .then(() => {
         const newArticle = formatDates(articleData);
-        return connection(newArticle).into('articles').returning('*')
+
+        return connection.insert(newArticle).into('articles').returning('*');
       })
       .then(articleRows => {
         const articleRef = makeRefObj(articleRows);
