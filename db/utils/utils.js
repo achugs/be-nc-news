@@ -1,7 +1,9 @@
 exports.formatDates = list => {
   return list.map(date => {
-    date.created_at = new Date(date.created_at)
-    return date
+    const { created_at, ...rest } = date;
+    const obj = { ...rest };
+    obj.created_at = new Date(created_at)
+    return obj
   })
 };
 
