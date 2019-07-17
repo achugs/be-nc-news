@@ -38,14 +38,25 @@ describe('/api', () => {
             expect(body.msg).to.equal('page not found')
           })
       });
-
     });
-    describe('/api/users/:username', () => {
-      it('checks that users is an array', () => {
+    describe('/users/:username', () => {
+      it(' returns status 200 and a user by their username with correct keys', () => {
         return request(app)
-          .get('/api/users')
+          .get('/api/users/lurker')
           .expect(200)
-          .then(({ body }) => { expect(body.users).to.be.an('array') })
+          .then(({ body }) => {
+            expect(body.user.username).to.be.equal('lurker');
+            expect(body.user).to.have.keys('username', 'avatar_url', 'name');
+          });
+      });
+      it(' returns status 404 when user doesn\'t exist', () => {
+        return request(app)
+          .get('/api/users/bunting')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.be.equal('user not found');
+
+          });
       });
     });
   });

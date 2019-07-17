@@ -4,7 +4,6 @@ const getTopics = () => {
   return connection.select('*').from('topics');
 }
 
-const getUsers = () => {
-  return connection.select('*').from('users');
-}
-module.exports = { getTopics, getUsers };
+
+
+module.exports = { getTopics };
