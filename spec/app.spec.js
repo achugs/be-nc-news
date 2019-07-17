@@ -45,7 +45,7 @@ describe('/api', () => {
           .get('/api/users/lurker')
           .expect(200)
           .then(({ body }) => {
-            expect(body.user.username).to.be.equal('lurker');
+            expect(body.user.username).to.equal('lurker');
             expect(body.user).to.have.keys('username', 'avatar_url', 'name');
           });
       });
@@ -55,6 +55,28 @@ describe('/api', () => {
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).to.be.equal('user not found');
+
+          });
+      });
+    });
+    describe('/article/:article_id', () => {
+      it('returns status 200 and a article by the article_id with correct keys', () => {
+        return request(app)
+          .get('/api/article/1')
+          .expect(200)
+          .then(({ body }) => {
+            // console.log(body)
+            expect(body.article.article_id).to.equal(1)
+            expect(body.article).to.have.keys('author', 'title', 'article_id',
+              'body', 'topic', 'created_at', 'votes', 'comment_count');
+          });
+      });
+      it(' returns status 404 when id doesn\'t exist', () => {
+        return request(app)
+          .get('/api/article/bunting')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.be.equal('article not found');
 
           });
       });
