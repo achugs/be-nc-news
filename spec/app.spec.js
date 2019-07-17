@@ -106,9 +106,15 @@ describe('/api', () => {
           });
       });
     });
-    describe('/article/:article_id/.comments', () => {
-      it('', () => {
-
+    describe('/article/:article_id/comments', () => {
+      it('returns status 200 and a posted comment with username and body keys ', () => {
+        return request(app)
+          .post('/api/article/1/comments')
+          .send({ username: 'butter_bridge', body: 'I am an angry journalist, hear me roar!' })
+          .expect(201)
+          .then(({ body }) => {
+            expect(body.comment).to.have.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
+          })
       });
     });
   });
