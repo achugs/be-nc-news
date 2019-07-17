@@ -11,7 +11,7 @@ apiRouter.use((err, req, res, next) => {
 });
 apiRouter.use('/article', articleRouter);
 apiRouter.use((err, req, res, next) => {
-  res.status(404).send({ msg: 'article not found' })
+  res.status(400).send({ msg: 'bad request' })
 });
 
 

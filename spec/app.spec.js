@@ -74,10 +74,9 @@ describe('/api', () => {
       it(' returns status 404 when id doesn\'t exist', () => {
         return request(app)
           .get('/api/article/bunting')
-          .expect(404)
+          .expect(400)
           .then(({ body }) => {
-            expect(body.msg).to.be.equal('article not found');
-
+            expect(body.msg).to.be.equal('bad request');
           });
       });
       it('PATCH returns a patched article with votes increased by 1 and a status of 200 ', () => {
@@ -97,17 +96,17 @@ describe('/api', () => {
             })
           })
       });
-      it('returns status 404 when article doesn\'t exist', () => {
+      it('returns status 400 when article doesn\'t exist', () => {
         return request(app)
           .patch('/api/article/bunting')
           .send({ inc_votes: 1 })
-          .expect(404)
+          .expect(400)
           .then(({ body }) => {
-            expect(body.msg).to.be.equal('article not found');
+            expect(body.msg).to.be.equal('bad request');
           });
       });
     });
-    describe('', () => {
+    describe('/article/:article_id/.comments', () => {
       it('', () => {
 
       });

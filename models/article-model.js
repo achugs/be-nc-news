@@ -11,7 +11,7 @@ exports.getArticles = (article_id) => {
     .then(article => {
       // console.log(!article, 'article?');
       if (!article) {
-        return Promise.reject({ status: 404, msg: 'article not found' });
+        return Promise.reject({ status: 404, msg: 'bad request' });
       } else {
         // console.log(article, 'model')
         return article
@@ -19,13 +19,13 @@ exports.getArticles = (article_id) => {
     })
 }
 
-exports.getArticlePatch = ({ article_id }, { inc_votes, ...rest }) => {
+exports.getArticlePatch = ({ article_id }, { inc_votes }) => {
 
   return connection.from('articles').where('articles.article_id', article_id)
     .increment('votes', inc_votes)
     .returning("*").then((article) => {
       if (!article.length) {
-        return Promise.reject({ status: 404, msg: 'article not found' });
+        return Promise.reject({ status: 400, msg: 'bad request' });
       } else {
         console.log(article)
         return article[0];
