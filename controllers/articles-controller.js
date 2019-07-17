@@ -11,8 +11,9 @@ exports.sendArticle = (req, res, next) => {
 };
 
 exports.sendArticlePatch = (req, res, next) => {
-  console.log(req.body)
-  getArticlePatch().then(article => {
-    res.status(200).send({});
+  console.log(req.params, req.body)
+
+  getArticlePatch(req.params, req.body).then(article => {
+    res.status(200).send({ article });
   }).catch(next);
 }

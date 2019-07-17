@@ -87,14 +87,29 @@ describe('/api', () => {
           .expect(200)
           .then(({ body }) => {
             expect(body.article).to.eql({
-              title: 'Living in the shadow of a great man',
-              topic: 'mitch',
-              author: 'butter_bridge',
-              body: 'I find this existence challenging',
-              created_at: 1542284514171,
-              votes: 101
+              article_id: 5,
+              title: 'UNCOVERED: catspiracy to bring down democracy',
+              body: 'Bastet walks amongst us, and the cats are taking arms!',
+              votes: 1,
+              topic: 'cats',
+              author: 'rogersop',
+              created_at: '2002-11-19T12:21:54.171Z'
             })
           })
+      });
+      it('returns status 404 when article doesn\'t exist', () => {
+        return request(app)
+          .patch('/api/article/bunting')
+          .send({ inc_votes: 1 })
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.be.equal('article not found');
+          });
+      });
+    });
+    describe('', () => {
+      it('', () => {
+
       });
     });
   });
