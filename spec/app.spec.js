@@ -80,6 +80,22 @@ describe('/api', () => {
 
           });
       });
+      it('PATCH returns a patched article with votes increased by 1 and a status of 200 ', () => {
+        return request(app)
+          .patch('/api/article/5')
+          .send({ inc_votes: 1 })//send in the patch object
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.article).to.eql({
+              title: 'Living in the shadow of a great man',
+              topic: 'mitch',
+              author: 'butter_bridge',
+              body: 'I find this existence challenging',
+              created_at: 1542284514171,
+              votes: 101
+            })
+          })
+      });
     });
   });
 });

@@ -1,4 +1,4 @@
-const { getArticles } = require('../models/article-model');
+const { getArticles, getArticlePatch } = require('../models/article-model');
 
 
 exports.sendArticle = (req, res, next) => {
@@ -9,3 +9,10 @@ exports.sendArticle = (req, res, next) => {
     res.status(200).send({ article });
   }).catch(next);
 };
+
+exports.sendArticlePatch = (req, res, next) => {
+  console.log(req.body)
+  getArticlePatch().then(article => {
+    res.status(200).send({});
+  }).catch(next);
+}
