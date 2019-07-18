@@ -4,5 +4,5 @@ exports.getUsername = username => {
   return connection
     .first('*')
     .from('users')
-    .where('username', '=', username);
+    .where('users.username', username);
 };

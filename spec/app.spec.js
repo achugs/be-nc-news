@@ -135,9 +135,14 @@ describe('/api', () => {
         //TODO: query errors)wait until after lecture
       })
     });
-    describe('/article', () => {
-      it('g', () => {
-
+    describe('/api/article', () => {
+      it('GET returns an articles array of article objects author, title, article_id,topic,created_at, votes and comment_count', () => {
+        return request(app)
+          .get('/api/articles')
+          .expect(200)
+          .then((res) => {
+            expect(res.body.article[0]).to.have.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
+          })
       });
     });
   });

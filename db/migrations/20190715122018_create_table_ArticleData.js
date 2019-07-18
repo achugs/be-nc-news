@@ -14,3 +14,8 @@ exports.up = (connection, Promise) => {
 exports.down = (connection, Promise) => {
   return connection.schema.dropTable('articles');
 };
+
+
+
+
+

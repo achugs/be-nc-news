@@ -1,6 +1,6 @@
 const connection = require('../db/connection');
 
-exports.getArticle = (article_id) => {
+exports.getArticleById = (article_id) => {
   return connection
     .first('articles.*')
     .count({ comment_count: 'comments.article_id' })
@@ -30,4 +30,24 @@ exports.getArticlePatch = ({ article_id }, { inc_votes }) => {
       }
     })
 }
+
+exports.getArticles = ({ sort_by, order = 'desc' }) => {
+
+  return connection
+    .select('articles.author', 'title', 'articles.article_id', 'topic', 'articles.created_at', 'articles.votes')
+    .from('articles')
+    .count({ comment_count: 'articles.article_id' })
+    .leftJoin('comments', 'articles.article_id', 'comments.article_id')
+    .groupBy('articles.article_id')
+
+    .orderBy(sort_by || 'articles.created_at', order || 'asc')
+    .then((article) => {
+      if (!article.length) {
+        return Promise.reject({ status: 400, msg: 'bad request' });
+      } else {
+        return article;
+      }
+    })
+}
+// ('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'commemt_count');
 
