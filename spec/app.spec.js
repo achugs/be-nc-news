@@ -179,5 +179,26 @@ describe('/api', () => {
           })
       });
     });
+    describe('/api/comments/:comment_id', () => {
+      it('PATCH returns a patched comment with votes increased by 1 and a status of 200 ', () => {
+        return request(app)
+          .patch('/api/comments/1')
+          .send({ inc_votes: 1 })
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comment.votes).to.equal(17)
+            expect(body.comment).to.have.all.keys(
+              'body',
+              'comment_id',
+              'article_id',
+              'author',
+              'created_at',
+              'votes'
+            );
+          })
+      });
+    });
+
   });
+
 });

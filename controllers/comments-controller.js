@@ -1,4 +1,4 @@
-const { postArticleComments, getCommentsById, } = require('../models/comment-models');
+const { postArticleComments, getCommentsById, patchComments } = require('../models/comment-models');
 
 exports.sendArticleComments = (req, res, next) => {
   const addComment = req.body;
@@ -20,4 +20,10 @@ exports.sendComment = (req, res, next) => {
     .then(comment => res.status(200)
       .send({ comment }))
     .catch(next)
+}
+
+exports.sendCommentbyId = (req, res, next) => {
+  patchComments(req.params, req.body).then(comment => {
+    res.status(200).send({ comment });
+  }).catch(err => console.log(err));
 }

@@ -22,6 +22,7 @@ exports.sendPostedArticleComments = (req, res, next) => {
 
 exports.sendArticles = (req, res, next) => {
   getArticles(req.query).then((article) => {
+
     res.status(200).send({ article })
-  }).catch(err => console.log(err))
+  }).catch(next)
 }

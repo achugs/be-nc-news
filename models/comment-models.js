@@ -16,3 +16,15 @@ exports.getCommentsById = ({ article_id }, { sort_by, order }) => {
     .orderBy(sort_by || 'created_at', order || 'desc')
     .returning('*')
 }
+
+exports.patchComments = ({ comment_id }, { inc_votes }) => {
+  return connection('comments')
+    .where({ comment_id })
+    .increment('votes', inc_votes || 0)
+    .returning('*')
+    .then(comment => {
+      console.log(comment)
+      if (!comment.length) return Promise.reject({ status: 404, message: 'comment not found' })
+      return comment[0];
+    })
+}
