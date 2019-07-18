@@ -20,7 +20,9 @@ exports.getArticleById = (article_id) => {
 }
 
 exports.getArticlePatch = ({ article_id }, { inc_votes }) => {
-  return connection.from('articles').where('articles.article_id', article_id)
+  return connection
+    .from('articles')
+    .where('articles.article_id', article_id)
     .increment('votes', inc_votes)
     .returning("*").then((article) => {
       if (!article.length) {
@@ -31,7 +33,7 @@ exports.getArticlePatch = ({ article_id }, { inc_votes }) => {
     })
 }
 
-exports.getArticles = ({ sort_by, order }) => {
+exports.getArticles = ({ sort_by, order, author, topic }) => {
 
   return connection
     .select('articles.author', 'title', 'articles.article_id', 'topic', 'articles.created_at', 'articles.votes')
@@ -40,6 +42,10 @@ exports.getArticles = ({ sort_by, order }) => {
     .leftJoin('comments', 'articles.article_id', 'comments.article_id')
     .groupBy('articles.article_id')
     .orderBy(sort_by || 'articles.created_at', order || 'desc')
+    .modify(query => {
+      if (author) query.where('articles.author', author);
+      if (topic) query.where('articles.topic', topic);
+    })
     .then((article) => {
       if (!article.length) {
         return Promise.reject({ status: 400, msg: 'bad request' });
@@ -48,5 +54,5 @@ exports.getArticles = ({ sort_by, order }) => {
       }
     })
 }
-// ('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'commemt_count');
+
 

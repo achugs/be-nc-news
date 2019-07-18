@@ -136,13 +136,36 @@ describe('/api', () => {
       })
     });
     describe('/api/article', () => {
-      it('GET returns an articles array of article objects author, title, article_id,topic,created_at, votes and comment_count', () => {
+      it('GET returns 200 and an articles array of article objects author, title, article_id,topic,created_at, votes and comment_count', () => {
         return request(app)
           .get('/api/articles')
           .expect(200)
           .then((res) => {
             expect(res.body.article[0]).to.have.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
+          })
+      });
+      it('GET returns 200 and an array of objects sorted by created_at in descending order', () => {
+        return request(app)
+          .get('/api/articles')
+          .expect(200)
+          .then((res) => {
             expect(res.body.article).to.be.sortedBy('created_at', { descending: true })
+          })
+      });
+      it('GET returns an author query, which filters the articles by the username value specified in the query', () => {
+        return request(app)
+          .get('/api/articles?author=butter_bridge')
+          .expect(200)
+          .then((res) => {
+            expect(res.body.article[0].author).to.equal('butter_bridge')
+          })
+      });
+      it('GET returns a topic query, which filters the articles by the topic value specified in the query', () => {
+        return request(app)
+          .get('/api/articles?topic=mitch')
+          .expect(200)
+          .then((res) => {
+            expect(res.body.article[0].topic).to.equal('mitch');
           })
       });
     });
