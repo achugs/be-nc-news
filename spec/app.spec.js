@@ -1,14 +1,17 @@
-process.env.NODE_ENV = 'test';
-const app = require('../app');
-const request = require('supertest');
-const { expect } = require('chai');
-const connection = require('../db/connection');
+process.env.NODE_ENV = 'test'
+const request = require('supertest')
+const chai = require('chai')
+const { expect } = chai
+const connection = require('../db/connection.js')
+const app = require('../app.js')
+const chaiSorted = require('chai-sorted')
+chai.use(chaiSorted)
 
 describe('/api', () => {
   beforeEach(() => connection.seed.run());
   after(() => connection.destroy());
   describe('/*', () => {
-    it('returns 404 and a page not founbd when passed an incorrect url', () => {
+    it('GET returns 404 and a page not founbd when passed an incorrect url', () => {
       return request(app)
         .get('/bunting')
         .expect(404)
@@ -16,13 +19,13 @@ describe('/api', () => {
     });
 
     describe('/topics', () => {
-      it('checks that topics is an array', () => {
+      it(' GET checks that topics is an array', () => {
         return request(app)
           .get('/api/topics')
           .expect(200)
           .then(({ body }) => { expect(body.topics).to.be.an('array') })
       });
-      it('checks that the topics array contains the correct keys', () => {
+      it('GET checks that the topics array contains the correct keys', () => {
         return request(app)
           .get('/api/topics')
           .expect(200)
@@ -40,7 +43,7 @@ describe('/api', () => {
       });
     });
     describe('/users/:username', () => {
-      it(' returns status 200 and a user by their username with correct keys', () => {
+      it(' GET returns status 200 and a user by their username with correct keys', () => {
         return request(app)
           .get('/api/users/lurker')
           .expect(200)
@@ -59,21 +62,23 @@ describe('/api', () => {
           });
       });
     });
-    describe('/article/:article_id', () => {
-      it('returns status 200 and a article by the article_id with correct keys', () => {
+    describe('/articles/:article_id', () => {
+      it('GET returns status 200 and a article by the article_id with correct keys', () => {
         return request(app)
-          .get('/api/article/1')
+          .get('/api/articles/1')
           .expect(200)
           .then(({ body }) => {
             // console.log(body)
             expect(body.article.article_id).to.equal(1)
             expect(body.article).to.have.keys('author', 'title', 'article_id',
               'body', 'topic', 'created_at', 'votes', 'comment_count');
+            expect(+body.article.comment_count).to.equal(1)
+            // TODO : prove comment count is working properly
           });
       });
       it(' returns status 404 when id doesn\'t exist', () => {
         return request(app)
-          .get('/api/article/bunting')
+          .get('/api/articles/bunting')
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).to.be.equal('bad request');
@@ -81,7 +86,7 @@ describe('/api', () => {
       });
       it('PATCH returns a patched article with votes increased by 1 and a status of 200 ', () => {
         return request(app)
-          .patch('/api/article/5')
+          .patch('/api/articles/5')
           .send({ inc_votes: 1 })//send in the patch object
           .expect(200)
           .then(({ body }) => {
@@ -98,7 +103,7 @@ describe('/api', () => {
       });
       it('returns status 400 when article doesn\'t exist', () => {
         return request(app)
-          .patch('/api/article/bunting')
+          .patch('/api/articles/bunting')
           .send({ inc_votes: 1 })
           .expect(400)
           .then(({ body }) => {
@@ -107,14 +112,32 @@ describe('/api', () => {
       });
     });
     describe('/article/:article_id/comments', () => {
-      it('returns status 200 and a posted comment with username and body keys ', () => {
+      it('POST returns status 201 and a posted comment with username and body keys ', () => {
         return request(app)
-          .post('/api/article/1/comments')
+          .post('/api/articles/1/comments')
           .send({ username: 'butter_bridge', body: 'I am an angry journalist, hear me roar!' })
           .expect(201)
           .then(({ body }) => {
             expect(body.comment).to.have.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
+            expect(body.comment.article_id).to.equal(1)
+            expect(body.comment.body).to.equal('I am an angry journalist, hear me roar!')
+            expect(body.comment.author).to.equal('butter_bridge')
+            // TODO: check the actual article id + body etc..
           })
+      });
+      it('GET returns a status 200 and an array of objects sorted by created_at in descending order', () => {
+        return request(app)
+          .get('/api/articles/1/comments')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comment).to.be.sortedBy('created_at', { descending: true })
+          })
+        //TODO: query errors)wait until after lecture
+      })
+    });
+    describe('/article', () => {
+      it('g', () => {
+
       });
     });
   });

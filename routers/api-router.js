@@ -9,7 +9,7 @@ apiRouter.use('/users', usersRouter);
 apiRouter.use((err, req, res, next) => {
   res.status(404).send({ msg: 'user not found' })
 });
-apiRouter.use('/article', articleRouter);
+apiRouter.use('/articles', articleRouter);
 apiRouter.use((err, req, res, next) => {
   res.status(400).send({ msg: 'bad request' })
 });

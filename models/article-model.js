@@ -1,6 +1,6 @@
 const connection = require('../db/connection');
 
-exports.getArticles = (article_id) => {
+exports.getArticle = (article_id) => {
   return connection
     .first('articles.*')
     .count({ comment_count: 'comments.article_id' })
@@ -26,7 +26,6 @@ exports.getArticlePatch = ({ article_id }, { inc_votes }) => {
       if (!article.length) {
         return Promise.reject({ status: 400, msg: 'bad request' });
       } else {
-        console.log(article)
         return article[0];
       }
     })

@@ -1,4 +1,4 @@
-const { postArticleComments } = require('../models/comment-models');
+const { postArticleComments, getCommentsById, } = require('../models/comment-models');
 
 exports.sendArticleComments = (req, res, next) => {
   const addComment = req.body;
@@ -14,3 +14,10 @@ exports.sendArticleComments = (req, res, next) => {
     })
     .catch(next);
 };
+
+exports.sendComment = (req, res, next) => {
+  getCommentsById(req.params, req.query)
+    .then(comment => res.status(200)
+      .send({ comment }))
+    .catch(next)
+}

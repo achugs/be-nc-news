@@ -1,9 +1,9 @@
-const { getArticles, getArticlePatch } = require('../models/article-model');
+const { getArticle, getArticlePatch } = require('../models/article-model');
 
 
 exports.sendArticle = (req, res, next) => {
   const { article_id } = req.params;
-  getArticles(article_id).then(article => {
+  getArticle(article_id).then(article => {
     res.status(200).send({ article });
   }).catch(next);
 };
@@ -17,5 +17,5 @@ exports.sendArticlePatch = (req, res, next) => {
 exports.sendPostedArticleComments = (req, res, next) => {
   getPostedArticleComments(req.params).then((comments) => {
     res.status(200).send({ comments })
-  }).catch(err => console.log(err))
+  }).catch(next)
 }
