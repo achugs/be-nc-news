@@ -31,7 +31,7 @@ exports.getArticlePatch = ({ article_id }, { inc_votes }) => {
     })
 }
 
-exports.getArticles = ({ sort_by, order = 'desc' }) => {
+exports.getArticles = ({ sort_by, order }) => {
 
   return connection
     .select('articles.author', 'title', 'articles.article_id', 'topic', 'articles.created_at', 'articles.votes')
@@ -39,8 +39,7 @@ exports.getArticles = ({ sort_by, order = 'desc' }) => {
     .count({ comment_count: 'comments.article_id' })
     .leftJoin('comments', 'articles.article_id', 'comments.article_id')
     .groupBy('articles.article_id')
-
-    .orderBy(sort_by || 'articles.created_at', order || 'asc')
+    .orderBy(sort_by || 'articles.created_at', order || 'desc')
     .then((article) => {
       if (!article.length) {
         return Promise.reject({ status: 400, msg: 'bad request' });

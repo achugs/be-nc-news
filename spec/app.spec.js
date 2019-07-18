@@ -142,6 +142,7 @@ describe('/api', () => {
           .expect(200)
           .then((res) => {
             expect(res.body.article[0]).to.have.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
+            expect(res.body.article).to.be.sortedBy('created_at', { descending: true })
           })
       });
     });
