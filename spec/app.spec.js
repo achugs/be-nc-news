@@ -110,6 +110,15 @@ describe('/api', () => {
             expect(body.msg).to.be.equal('bad request');
           });
       });
+      it('returns status 400 when inc_votes is not a number', () => {
+        return request(app)
+          .patch('/api/articles/5')
+          .send({ inc_votes: 'bunting' })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.be.equal('bad request');
+          });
+      });
     });
     describe('/article/:article_id/comments', () => {
       it('POST returns status 201 and a posted comment with username and body keys ', () => {
@@ -135,6 +144,7 @@ describe('/api', () => {
         //TODO: query errors)wait until after lecture
       })
     });
+
     describe('/api/article', () => {
       it('GET returns 200 and an articles array of article objects author, title, article_id,topic,created_at, votes and comment_count', () => {
         return request(app)
@@ -162,10 +172,10 @@ describe('/api', () => {
       });
       it('GET returns a topic query, which filters the articles by the topic value specified in the query', () => {
         return request(app)
-          .get('/api/articles?topic=mitch')
+          .get('/api/articles?topic=cats')
           .expect(200)
           .then((res) => {
-            expect(res.body.article[0].topic).to.equal('mitch');
+            expect(res.body.article[0].topic).to.equal('cats');
           })
       });
     });
