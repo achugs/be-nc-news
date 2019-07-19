@@ -1,4 +1,4 @@
-const { getArticleById, getArticlePatch, getArticles } = require('../models/article-model');
+const { getArticleById, getArticlePatch, getArticles, checkQuery } = require('../models/article-model');
 
 
 exports.sendArticleById = (req, res, next) => {
@@ -21,8 +21,31 @@ exports.sendPostedArticleComments = (req, res, next) => {
 }
 
 exports.sendArticles = (req, res, next) => {
-  getArticles(req.query).then((article) => {
+  const { sort_by, order, author, topic } = req.query;
 
-    res.status(200).send({ article })
-  }).catch(next)
+  const sortedByOrder = ['asc', 'desc'].includes(order)
+  const sortby = ['author', 'title', 'article_id', 'topic', 'created_at', 'votes'].includes(sort_by)
+  if (order && !sortedByOrder) { next({ msg: 'page not found', status: 400 }) };
+  if (sort_by && !sortby) { next({ msg: 'page not found', status: 400 }) }
+  else {
+
+    getArticles(req.params, req.query)
+      .then((articles) => {
+
+        const auth = author !== undefined ? checkQuery(author, 'users', 'username') : null;
+        const top = topic !== undefined ? checkQuery(topic, 'articles', 'topic') : null;
+
+        return Promise.all([auth, top, articles])
+          .then(([auth, top, articles]) => {
+            if (auth === false) return Promise.reject({ msg: 'page not found', status: 404 });
+            else if (top === false) return Promise.reject({ msg: 'page not found', status: 404 });
+            else return res.status(200).send({ articles })
+          })
+
+      }).catch(next)
+  }
+
+
+
+
 }

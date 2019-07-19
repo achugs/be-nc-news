@@ -33,7 +33,7 @@ describe('/api', () => {
             expect(body.topics[0]).to.have.keys('slug', 'description')
           })
       });
-      it('returns status 404 and page not found when passed an incorrect url', () => {
+      it('Error returns status 404 and page not found when passed an incorrect url', () => {
         return request(app)
           .get('/api/bunting')
           .expect(404)
@@ -63,7 +63,7 @@ describe('/api', () => {
             expect(body.user).to.have.keys('username', 'avatar_url', 'name');
           });
       });
-      it(' returns status 404 when user doesn\'t exist', () => {
+      it('Error returns status 404 when user doesn\'t exist', () => {
         return request(app)
           .get('/api/users/bunting')
           .expect(404)
@@ -98,7 +98,7 @@ describe('/api', () => {
 
           });
       });
-      it(' returns status 404 when id doesn\'t exist', () => {
+      it('Error returns status 404 when id doesn\'t exist', () => {
         return request(app)
           .get('/api/articles/bunting')
           .expect(400)
@@ -134,7 +134,7 @@ describe('/api', () => {
             })
           })
       });
-      it('returns status 400 when article doesn\'t exist', () => {
+      it('Error returns status 400 when article doesn\'t exist', () => {
         return request(app)
           .patch('/api/articles/bunting')
           .send({ inc_votes: 1 })
@@ -143,7 +143,7 @@ describe('/api', () => {
             expect(body.msg).to.be.equal('bad request');
           });
       });
-      it('returns status 400 when inc_votes is not a number', () => {
+      it('Error returns status 400 when inc_votes is not a number', () => {
         return request(app)
           .patch('/api/articles/5')
           .send({ inc_votes: 'bunting' })
@@ -186,6 +186,13 @@ describe('/api', () => {
           })
         //TODO: query errors)wait until after lecture
       })
+      it('Error returns status 404 and an incorrect path ', () => {
+        return request(app)
+          .post('/api/articles/1/bunting')
+          .send({ username: 'butter_bridge', body: 'I am an angry journalist, hear me roar!' })
+          .expect(404)
+      });
+
       it('Method not allowed: status 405 for /api/articles/1/comments', () => {
         const invalidMethods = ['patch', 'put'];
         invalidMethods.map(method => {
@@ -205,7 +212,7 @@ describe('/api', () => {
           .get('/api/articles')
           .expect(200)
           .then((res) => {
-            expect(res.body.article[0]).to.have.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
+            expect(res.body.articles[0]).to.have.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
           })
       });
       it('GET returns 200 and an array of objects sorted by created_at in descending order', () => {
@@ -213,7 +220,7 @@ describe('/api', () => {
           .get('/api/articles')
           .expect(200)
           .then((res) => {
-            expect(res.body.article).to.be.sortedBy('created_at', { descending: true })
+            expect(res.body.articles).to.be.sortedBy('created_at', { descending: true })
           })
       });
       it('Method not allowed: status 405 for /api/articles', () => {
@@ -227,22 +234,7 @@ describe('/api', () => {
             });
         });
       });
-      it('GET returns an author query, which filters the articles by the username value specified in the query', () => {
-        return request(app)
-          .get('/api/articles?author=butter_bridge')
-          .expect(200)
-          .then((res) => {
-            expect(res.body.article[0].author).to.equal('butter_bridge')
-          })
-      });
-      it('GET returns a topic query, which filters the articles by the topic value specified in the query', () => {
-        return request(app)
-          .get('/api/articles?topic=cats')
-          .expect(200)
-          .then((res) => {
-            expect(res.body.article[0].topic).to.equal('cats');
-          })
-      });
+
       it('Error returns 404 when passed an incorrect path', () => {
         return request(app)
           .get('/api/bunting')
@@ -253,6 +245,7 @@ describe('/api', () => {
           .get('/api/articles/bunting')
           .expect(400)
       });
+
       it('Method not allowed: status 405 for /api/articles?author=butter_bridge', () => {
         const invalidMethods = ['patch', 'put', 'post'];
         invalidMethods.map(method => {

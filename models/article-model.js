@@ -33,23 +33,27 @@ exports.getArticlePatch = ({ article_id }, { inc_votes }) => {
     })
 }
 
-exports.getArticles = ({ sort_by, order, author, topic }) => {
+exports.getArticles = ({ sort_by = 'created_at', order = 'desc', author, topic }) => {
   return connection
     .select('articles.author', 'title', 'articles.article_id', 'topic', 'articles.created_at', 'articles.votes')
     .from('articles')
     .count({ comment_count: 'comments.article_id' })
     .leftJoin('comments', 'articles.article_id', 'comments.article_id')
     .groupBy('articles.article_id')
-    .orderBy(sort_by || 'articles.created_at', order || 'desc')
+    .orderBy(sort_by, order)
     .modify(query => {
-      if (author) query.where('articles.author', author);
-      if (topic) query.where('articles.topic', topic);
+      if (author) query.where({ 'articles.author': author });
+      if (topic) query.where({ 'articles.topic': topic });
     })
-    .then((article) => {
-      if (!article.length) return Promise.reject({ status: 404, msg: 'page not found' });
-      else {
-        return article;
-      }
+
+
+}
+
+exports.checkQuery = (query, column) => {
+  return connection.select('*').from('articles').where(column, query)
+    .then((row) => {
+      if (row.length === 0) return false;
+      return true;
     })
 }
 

@@ -5,6 +5,12 @@ exports.routeError = (req, res) => {
   res.status(404).send({ msg: 'page not found' });
 }
 
+
+
+
+
+
+
 exports.customErrors = (err, req, res, next) => {
   if (err.status) res.status(err.status).send({ msg: err.message });
   else next(err);
