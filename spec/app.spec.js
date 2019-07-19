@@ -184,7 +184,6 @@ describe('/api', () => {
           .then(({ body }) => {
             expect(body.comment).to.be.sortedBy('created_at', { descending: true })
           })
-        //TODO: query errors)wait until after lecture
       })
       it('Error returns status 404 and an incorrect path ', () => {
         return request(app)
@@ -235,6 +234,7 @@ describe('/api', () => {
         });
       });
 
+
       it('Error returns 404 when passed an incorrect path', () => {
         return request(app)
           .get('/api/bunting')
@@ -245,12 +245,19 @@ describe('/api', () => {
           .get('/api/articles/bunting')
           .expect(400)
       });
-
+      it('GET returns 200 when passed a correct path', () => {
+        return request(app)
+          .get('/api/articles?username=butter_bridge')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles[0].author).to.equal('butter_bridge')
+          })
+      });
       it('Method not allowed: status 405 for /api/articles?author=butter_bridge', () => {
         const invalidMethods = ['patch', 'put', 'post'];
         invalidMethods.map(method => {
           return request(app)
-          [method]('/api/articles?author=butter_bridge')
+          [method]('/api/articles?username=butter_bridge')
             .expect(405)
             .then(({ body }) => {
               expect(body.msg).to.equal('method not allowed');

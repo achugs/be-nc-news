@@ -28,7 +28,6 @@ exports.sendArticles = (req, res, next) => {
   if (order && !sortedByOrder) { next({ msg: 'page not found', status: 400 }) };
   if (sort_by && !sortby) { next({ msg: 'page not found', status: 400 }) }
   else {
-
     getArticles(req.params, req.query)
       .then((articles) => {
 
@@ -41,7 +40,6 @@ exports.sendArticles = (req, res, next) => {
             else if (top === false) return Promise.reject({ msg: 'page not found', status: 404 });
             else return res.status(200).send({ articles })
           })
-
       }).catch(next)
   }
 
