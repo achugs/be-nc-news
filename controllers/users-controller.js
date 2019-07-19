@@ -6,7 +6,7 @@ exports.sendUsername = (req, res, next) => {
   getUsername(username)
     .then(user => {
       if (!user) {
-        return Promise.reject({ status: 404, msg: 'user not found' });
+        return Promise.reject({ status: 404, msg: 'page not found' });
       } else {
         res.status(200).send({ user });
       }

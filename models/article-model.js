@@ -11,7 +11,7 @@ exports.getArticleById = (article_id) => {
     .then(article => {
       // console.log(!article, 'article?');
       if (!article) {
-        return Promise.reject({ status: 404, msg: 'bad request' });
+        return Promise.reject({ status: 404, msg: 'page not found' });
       } else {
         // console.log(article, 'model')
         return article
@@ -26,7 +26,7 @@ exports.getArticlePatch = ({ article_id }, { inc_votes }) => {
     .increment('votes', inc_votes)
     .returning("*").then((article) => {
       if (!article.length) {
-        return Promise.reject({ status: 400, msg: 'bad request' });
+        return Promise.reject({ status: 404, msg: 'page not found' });
       } else {
         return article[0];
       }
@@ -34,7 +34,6 @@ exports.getArticlePatch = ({ article_id }, { inc_votes }) => {
 }
 
 exports.getArticles = ({ sort_by, order, author, topic }) => {
-
   return connection
     .select('articles.author', 'title', 'articles.article_id', 'topic', 'articles.created_at', 'articles.votes')
     .from('articles')
@@ -47,12 +46,13 @@ exports.getArticles = ({ sort_by, order, author, topic }) => {
       if (topic) query.where('articles.topic', topic);
     })
     .then((article) => {
-      if (!article.length) {
-        return Promise.reject({ status: 404, msg: 'page not found' });
-      } else {
+      if (!article.length) return Promise.reject({ status: 404, msg: 'page not found' });
+      else {
         return article;
       }
     })
 }
+
+
 
 

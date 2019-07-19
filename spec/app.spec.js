@@ -41,6 +41,17 @@ describe('/api', () => {
             expect(body.msg).to.equal('page not found')
           })
       });
+      it('Method not allowed: status 405 for /topics', () => {
+        const invalidMethods = ['patch', 'put', 'post'];
+        invalidMethods.map(method => {
+          return request(app)
+          [method]('/api/topics')
+            .expect(405)
+            .then(({ body }) => {
+              expect(body.msg).to.equal('method not allowed');
+            });
+        });
+      });
     });
     describe('/users/:username', () => {
       it(' GET returns status 200 and a user by their username with correct keys', () => {
@@ -57,10 +68,22 @@ describe('/api', () => {
           .get('/api/users/bunting')
           .expect(404)
           .then(({ body }) => {
-            expect(body.msg).to.be.equal('user not found');
+            expect(body.msg).to.be.equal('page not found');
 
           });
       });
+      it('Method not allowed: status 405 for /users', () => {
+        const invalidMethods = ['patch', 'put', 'post'];
+        invalidMethods.map(method => {
+          return request(app)
+          [method]('/api/users/lurker')
+            .expect(405)
+            .then(({ body }) => {
+              expect(body.msg).to.equal('method not allowed');
+            });
+        });
+      });
+
     });
     describe('/articles/:article_id', () => {
       it('GET returns status 200 and a article by the article_id with correct keys', () => {
@@ -68,12 +91,11 @@ describe('/api', () => {
           .get('/api/articles/1')
           .expect(200)
           .then(({ body }) => {
-            // console.log(body)
             expect(body.article.article_id).to.equal(1)
             expect(body.article).to.have.keys('author', 'title', 'article_id',
               'body', 'topic', 'created_at', 'votes', 'comment_count');
             expect(+body.article.comment_count).to.equal(1)
-            // TODO : prove comment count is working properly
+
           });
       });
       it(' returns status 404 when id doesn\'t exist', () => {
@@ -84,10 +106,21 @@ describe('/api', () => {
             expect(body.msg).to.be.equal('bad request');
           });
       });
+      it('Method not allowed: status 405 for /topics', () => {
+        const invalidMethods = ['patch', 'put', 'post'];
+        invalidMethods.map(method => {
+          return request(app)
+          [method]('/api/articles')
+            .expect(405)
+            .then(({ body }) => {
+              expect(body.msg).to.equal('method not allowed');
+            });
+        });
+      });
       it('PATCH returns a patched article with votes increased by 1 and a status of 200 ', () => {
         return request(app)
           .patch('/api/articles/5')
-          .send({ inc_votes: 1 })//send in the patch object
+          .send({ inc_votes: 1 })
           .expect(200)
           .then(({ body }) => {
             expect(body.article).to.eql({
@@ -119,6 +152,17 @@ describe('/api', () => {
             expect(body.msg).to.be.equal('bad request');
           });
       });
+      it('Method not allowed: status 405 for /articles/5', () => {
+        const invalidMethods = ['put', 'post'];
+        invalidMethods.map(method => {
+          return request(app)
+          [method]('/api/articles/5')
+            .expect(405)
+            .then(({ body }) => {
+              expect(body.msg).to.equal('method not allowed');
+            });
+        });
+      });
     });
     describe('/article/:article_id/comments', () => {
       it('POST returns status 201 and a posted comment with username and body keys ', () => {
@@ -131,7 +175,6 @@ describe('/api', () => {
             expect(body.comment.article_id).to.equal(1)
             expect(body.comment.body).to.equal('I am an angry journalist, hear me roar!')
             expect(body.comment.author).to.equal('butter_bridge')
-            // TODO: check the actual article id + body etc..
           })
       });
       it('GET returns a status 200 and an array of objects sorted by created_at in descending order', () => {
@@ -143,6 +186,17 @@ describe('/api', () => {
           })
         //TODO: query errors)wait until after lecture
       })
+      it('Method not allowed: status 405 for /api/articles/1/comments', () => {
+        const invalidMethods = ['patch', 'put'];
+        invalidMethods.map(method => {
+          return request(app)
+          [method]('/api/articles/1/comments')
+            .expect(405)
+            .then(({ body }) => {
+              expect(body.msg).to.equal('method not allowed');
+            });
+        });
+      });
     });
 
     describe('/api/article', () => {
@@ -162,6 +216,17 @@ describe('/api', () => {
             expect(res.body.article).to.be.sortedBy('created_at', { descending: true })
           })
       });
+      it('Method not allowed: status 405 for /api/articles', () => {
+        const invalidMethods = ['patch', 'put', 'post'];
+        invalidMethods.map(method => {
+          return request(app)
+          [method]('/api/articles')
+            .expect(405)
+            .then(({ body }) => {
+              expect(body.msg).to.equal('method not allowed');
+            });
+        });
+      });
       it('GET returns an author query, which filters the articles by the username value specified in the query', () => {
         return request(app)
           .get('/api/articles?author=butter_bridge')
@@ -178,20 +243,30 @@ describe('/api', () => {
             expect(res.body.article[0].topic).to.equal('cats');
           })
       });
-      it('Error returns 400 when passed an incorrect path', () => {
+      it('Error returns 404 when passed an incorrect path', () => {
         return request(app)
           .get('/api/bunting')
           .expect(404)
       });
+      it('Error returns 400 when passed an incorrect path', () => {
+        return request(app)
+          .get('/api/articles/bunting')
+          .expect(400)
+      });
+      it('Method not allowed: status 405 for /api/articles?author=butter_bridge', () => {
+        const invalidMethods = ['patch', 'put', 'post'];
+        invalidMethods.map(method => {
+          return request(app)
+          [method]('/api/articles?author=butter_bridge')
+            .expect(405)
+            .then(({ body }) => {
+              expect(body.msg).to.equal('method not allowed');
+            });
+        });
+      });
+
     });
-    it('GET returns a topic query, which filters the articles by the topic value specified in the query', () => {
-      return request(app)
-        .get('/api/articles?topic=cats')
-        .expect(200)
-        .then((res) => {
-          expect(res.body.article[0].topic).to.equal('cats');
-        })
-    });
+
     describe('/api/comments/:comment_id', () => {
       it('PATCH returns a patched comment with votes increased by 1 and a status of 200 ', () => {
         return request(app)
@@ -215,6 +290,17 @@ describe('/api', () => {
           .send({ inc_votes: 1 })
           .expect(404)
       });
+      it('Method not allowed: status 405 for /api/comments/1', () => {
+        const invalidMethods = ['put', 'post', 'get'];
+        invalidMethods.map(method => {
+          return request(app)
+          [method]('/api/comments/1')
+            .expect(405)
+            .then(({ body }) => {
+              expect(body.msg).to.equal('method not allowed');
+            });
+        });
+      });
       it('Delete returns a status 204 ', () => {
         return request(app)
           .delete('/api/comments/1')
@@ -226,7 +312,6 @@ describe('/api', () => {
           .expect(400)
       })
     });
-
   });
 
 });

@@ -3,17 +3,20 @@ const { sendTopics } = require('../controllers/topics-controller');
 const usersRouter = require('./username-router');
 const articleRouter = require('./article-router');
 const commentRouter = require('./comment-router');
+const { methodErrors } = require('../errors/errors')
 
 
-apiRouter.get('/topics', sendTopics);
+apiRouter.route('/topics').get(sendTopics).all(methodErrors);
 apiRouter.use('/users', usersRouter);
 apiRouter.use((err, req, res, next) => {
-  res.status(404).send({ msg: 'user not found' })
+  res.status(404).send({ msg: 'page not found' })
 });
 
 apiRouter.use('/articles', articleRouter);
 apiRouter.use((err, req, res, next) => {
-  res.status(400).send({ msg: 'bad request' })
+  res.status(400).send({
+    msg: 'bad request'
+  })
 });
 
 apiRouter.use('/comments', commentRouter);
