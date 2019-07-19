@@ -48,7 +48,7 @@ exports.getArticles = ({ sort_by, order, author, topic }) => {
     })
     .then((article) => {
       if (!article.length) {
-        return Promise.reject({ status: 400, msg: 'bad request' });
+        return Promise.reject({ status: 404, msg: 'page not found' });
       } else {
         return article;
       }

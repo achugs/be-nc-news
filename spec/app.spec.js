@@ -193,10 +193,19 @@ describe('/api', () => {
               'article_id',
               'author',
               'created_at',
-              'votes'
-            );
+              'votes');
           })
       });
+      it('Delete returns a status 204 ', () => {
+        return request(app)
+          .delete('/api/comments/1')
+          .expect(204)
+      });
+      it('Error 404 when passed a nonexistent id', () => {
+        return request(app)
+          .delete('/api/comments/bunting')
+          .expect(400)
+      })
     });
 
   });

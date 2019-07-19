@@ -23,8 +23,18 @@ exports.patchComments = ({ comment_id }, { inc_votes }) => {
     .increment('votes', inc_votes || 0)
     .returning('*')
     .then(comment => {
-      console.log(comment)
-      if (!comment.length) return Promise.reject({ status: 404, message: 'comment not found' })
+      if (!comment.length) return Promise.reject({ status: 404, msg: 'comment not found' })
       return comment[0];
+    })
+}
+
+exports.deletedComment = ({ comment_id }) => {
+  return connection('comments')
+    .where('comment_id', comment_id)
+    .del()
+    .from('comments')
+    .then(numberOFDel => {
+      if (numberOFDel !== 1) return Promise.reject({ status: 404, msg: 'comment not found' });
+      if (!numberOFDel) return Promise.reject({ status: 404, msg: 'comment not found' });
     })
 }

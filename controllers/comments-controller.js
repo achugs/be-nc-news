@@ -1,4 +1,4 @@
-const { postArticleComments, getCommentsById, patchComments } = require('../models/comment-models');
+const { postArticleComments, getCommentsById, patchComments, deletedComment } = require('../models/comment-models');
 
 exports.sendArticleComments = (req, res, next) => {
   const addComment = req.body;
@@ -23,7 +23,15 @@ exports.sendComment = (req, res, next) => {
 }
 
 exports.sendCommentbyId = (req, res, next) => {
-  patchComments(req.params, req.body).then(comment => {
-    res.status(200).send({ comment });
-  }).catch(err => console.log(err));
+  patchComments(req.params, req.body)
+    .then(comment => {
+      res.status(200).send({ comment });
+    }).catch(next);
+}
+
+exports.deleteComment = (req, res, next) => {
+  deletedComment(req.params)
+    .then(() => {
+      res.sendStatus(204)
+    }).catch(next)
 }
