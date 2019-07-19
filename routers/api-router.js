@@ -12,6 +12,10 @@ apiRouter.use((err, req, res, next) => {
 });
 
 apiRouter.use('/articles', articleRouter);
+apiRouter.use((err, req, res, next) => {
+  res.status(400).send({ msg: 'bad request' })
+});
+
 apiRouter.use('/comments', commentRouter);
 apiRouter.use((err, req, res, next) => {
   res.status(400).send({ msg: 'bad request' })

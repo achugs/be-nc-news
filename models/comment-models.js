@@ -23,7 +23,6 @@ exports.patchComments = ({ comment_id }, { inc_votes }) => {
     .increment('votes', inc_votes || 0)
     .returning('*')
     .then(comment => {
-      console.log(comment)
       if (!comment[0]) return Promise.reject({ status: 404, msg: 'comment not found' })
 
       return comment[0];

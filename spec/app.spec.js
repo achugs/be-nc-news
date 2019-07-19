@@ -178,6 +178,19 @@ describe('/api', () => {
             expect(res.body.article[0].topic).to.equal('cats');
           })
       });
+      it('Error returns 400 when passed an incorrect path', () => {
+        return request(app)
+          .get('/api/bunting')
+          .expect(404)
+      });
+    });
+    it('GET returns a topic query, which filters the articles by the topic value specified in the query', () => {
+      return request(app)
+        .get('/api/articles?topic=cats')
+        .expect(200)
+        .then((res) => {
+          expect(res.body.article[0].topic).to.equal('cats');
+        })
     });
     describe('/api/comments/:comment_id', () => {
       it('PATCH returns a patched comment with votes increased by 1 and a status of 200 ', () => {
