@@ -196,12 +196,18 @@ describe('/api', () => {
               'votes');
           })
       });
+      it('Error returns 404 when there is no comments id ', () => {
+        return request(app)
+          .patch('/api/comments/')
+          .send({ inc_votes: 1 })
+          .expect(404)
+      });
       it('Delete returns a status 204 ', () => {
         return request(app)
           .delete('/api/comments/1')
           .expect(204)
       });
-      it('Error 404 when passed a nonexistent id', () => {
+      it('Error 400 when passed a nonexistent id', () => {
         return request(app)
           .delete('/api/comments/bunting')
           .expect(400)
