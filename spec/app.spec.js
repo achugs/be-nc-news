@@ -212,6 +212,14 @@ describe('/api', () => {
             expect(body.comment.author).to.equal('butter_bridge')
           })
       });
+      it('Error returns status 404 when path is not a valid number', () => {
+        return request(app)
+          .post('/api/articles/10000/comments')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Article does not exist')
+          })
+      });
       it('GET returns a status 200 and an array of objects sorted by created_at in descending order', () => {
         return request(app)
           .get('/api/articles/1/comments')
@@ -220,6 +228,7 @@ describe('/api', () => {
             expect(body.comment).to.be.sortedBy('created_at', { descending: true })
           })
       })
+
       it('Error returns status 404 and an incorrect path ', () => {
         return request(app)
           .post('/api/articles/1/bunting')
