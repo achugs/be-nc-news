@@ -12,8 +12,10 @@ app.all('/*', routeError)
 
 app.use(psqlError);
 
+app.use(customError);
+
 app.use(serverError);
 
-app.use(customError);
+
 
 module.exports = app;

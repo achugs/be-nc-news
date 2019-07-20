@@ -9,13 +9,17 @@ exports.sendArticleById = (req, res, next) => {
 };
 
 exports.sendArticlePatch = (req, res, next) => {
-  getArticlePatch(req.params, req.body).then(article => {
-    res.status(200).send({ article });
-  }).catch(next);
+  const { inc_votes } = req.body;
+  if (inc_votes === undefined) return next({ status: 400, msg: 'No Body Found...' });
+  else {
+    getArticlePatch(req.params, req.body).then(article => {
+      res.status(200).send({ article });
+    }).catch(next);
+  }
 }
 
 exports.sendPostedArticleComments = (req, res, next) => {
-  getPostedArticleComments(req.params).then((comments) => {
+  getPostedArticleComments(req.params, req.body).then((comments) => {
     res.status(201).send({ comments })
   }).catch(next)
 }

@@ -59,8 +59,8 @@ describe('/api', () => {
           .get('/api/users/lurker')
           .expect(200)
           .then(({ body }) => {
-            expect(body.user.username).to.equal('lurker');
-            expect(body.user).to.have.keys('username', 'avatar_url', 'name');
+            expect(body.user[0].username).to.equal('lurker');
+            expect(body.user[0]).to.have.keys('username', 'avatar_url', 'name');
           });
       });
       it('Error returns status 404 when user doesn\'t exist', () => {
@@ -68,8 +68,7 @@ describe('/api', () => {
           .get('/api/users/bunting')
           .expect(404)
           .then(({ body }) => {
-            expect(body.msg).to.be.equal('page not found');
-
+            expect(body.msg).to.equal('page not found');
           });
       });
       it('Method not allowed: status 405 for /users', () => {
@@ -98,7 +97,15 @@ describe('/api', () => {
 
           });
       });
-      it('Error returns status 404 when id doesn\'t exist', () => {
+      it('Error returns 404 when path is not a valid number', () => {
+        return request(app)
+          .get("/api/articles/1000")
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.eql('page not found');
+          });
+      });
+      it('Error returns status 400 when id doesn\'t exist', () => {
         return request(app)
           .get('/api/articles/bunting')
           .expect(400)
@@ -152,6 +159,25 @@ describe('/api', () => {
             expect(body.msg).to.be.equal('Invalid syntax');
           });
       });
+      it('Error returns status 404 when path is not a valid number', () => {
+        return request(app)
+          .patch('/api/articles/5000')
+          .send({ inc_votes: 1 })
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.be.equal('page not found');
+          });
+      });
+      it('Error returns status 400 when no patch is sent', () => {
+        return request(app)
+          .patch('/api/articles/5')
+          .expect(400)
+          .then(({ body }) => {
+            console.log(body.msg)
+            expect(body.msg).to.be.equal('No Body Found...');
+          });
+      });
+
       it('Method not allowed: status 405 for /articles/5', () => {
         const invalidMethods = ['put', 'post'];
         invalidMethods.map(method => {
@@ -164,7 +190,7 @@ describe('/api', () => {
         });
       });
     });
-    describe('/article/:article_id/comments', () => {
+    describe.only('/article/:article_id/comments', () => {
       it('POST returns status 201 and a posted comment with username and body keys ', () => {
         return request(app)
           .post('/api/articles/1/comments')
@@ -190,8 +216,11 @@ describe('/api', () => {
           .post('/api/articles/1/bunting')
           .send({ username: 'butter_bridge', body: 'I am an angry journalist, hear me roar!' })
           .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Page not found')
+          })
       });
-
+      //TODO: if id is not a valid number(404), not a number(400), nothing sent(400), too many keys(400) 
       it('Method not allowed: status 405 for /api/articles/1/comments', () => {
         const invalidMethods = ['patch', 'put'];
         invalidMethods.map(method => {

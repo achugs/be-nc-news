@@ -19,13 +19,16 @@ exports.psqlError = (err, req, res, next) => {
   else next(err);
 };
 
+exports.customError = (err, req, res, next) => {
+  if (err.status) res.status(err.status).send({ msg: err.msg });
+  else next(err);
+}
+
 exports.serverError = (err, req, res, next) => {
+  console.log(err)
   res.status(500).send({ msg: "Internal server error" });
 };
 
-exports.customError = (err, req, res, next) => {
-  if (err.status) res.status(err.status).send({ msg: err.message });
-  else next(err);
-}
+
 
 

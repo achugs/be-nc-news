@@ -3,7 +3,7 @@ const connection = require('../db/connection');
 exports.getArticleById = (article_id) => {
   return connection
     .first('articles.*')
-    .count({ comment_count: 'comments.article_id' })
+    .count({ comment_count: 'comments.comment_id' })
     .from('articles')
     .leftJoin('comments', 'articles.article_id', 'comments.comment_id')
     .groupBy('articles.article_id')
@@ -21,10 +21,12 @@ exports.getArticleById = (article_id) => {
 
 exports.getArticlePatch = ({ article_id }, { inc_votes }) => {
   return connection
+    .select('*')
     .from('articles')
     .where('articles.article_id', article_id)
     .increment('votes', inc_votes)
-    .returning("*").then((article) => {
+    .returning("*")
+    .then((article) => {
       if (!article.length) {
         return Promise.reject({ status: 404, msg: 'page not found' });
       } else {

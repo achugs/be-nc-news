@@ -4,6 +4,7 @@ const { methodErrors } = require('../errors/errors')
 
 commentRouter.route('/:comment_id')
   .patch(sendCommentbyId)
-  .delete(deleteComment).all(methodErrors);
+  .delete(deleteComment)
+  .all(methodErrors);
 
 module.exports = commentRouter;

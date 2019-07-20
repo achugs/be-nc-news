@@ -12,7 +12,6 @@ apiRouter.route('/topics')
 
 apiRouter.use('/users', usersRouter)
 
-
 apiRouter.use('/articles', articleRouter);
 
 apiRouter.use('/comments', commentRouter);
