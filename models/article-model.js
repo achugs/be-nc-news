@@ -24,7 +24,7 @@ exports.getArticlePatch = ({ article_id }, { inc_votes }) => {
     .select('*')
     .from('articles')
     .where('articles.article_id', article_id)
-    .increment('votes', inc_votes)
+    .increment('votes', inc_votes || 0)
     .returning("*")
     .then((article) => {
       if (!article.length) {

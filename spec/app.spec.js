@@ -141,6 +141,15 @@ describe('/api', () => {
             })
           })
       });
+      it('PATCH returns a patched article with votes increased by 1 and a status of 200 when the original vote value was greater than 0', () => {
+        return request(app)
+          .patch('/api/articles/1')
+          .send({ inc_votes: 1 })
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.article.votes).to.eql(101)
+          })
+      });
       it('Error returns status 400 when article doesn\'t exist', () => {
         return request(app)
           .patch('/api/articles/bunting')
