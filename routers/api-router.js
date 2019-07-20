@@ -6,6 +6,7 @@ const commentRouter = require('./comment-router');
 const { methodErrors } = require('../errors/errors')
 
 
+apiRouter.route('/').all(methodErrors)
 apiRouter.route('/topics')
   .get(sendTopics)
   .all(methodErrors);

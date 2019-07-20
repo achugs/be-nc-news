@@ -190,7 +190,7 @@ describe('/api', () => {
         });
       });
     });
-    describe.only('/article/:article_id/comments', () => {
+    describe('/article/:article_id/comments', () => {
       it('POST returns status 201 and a posted comment with username and body keys ', () => {
         return request(app)
           .post('/api/articles/1/comments')
@@ -341,11 +341,21 @@ describe('/api', () => {
           .delete('/api/comments/1')
           .expect(204)
       });
+      it('Method not allowed: status 405 for /api', () => {
+        return request(app)
+          .delete('/api')
+          .expect(405)
+      });
       it('Error 400 when passed a nonexistent id', () => {
         return request(app)
           .delete('/api/comments/bunting')
           .expect(400)
       })
+      it('Error returns 404 when passed a valid comment_id that does not exist', () => {
+        return request(app)
+          .delete('/api/comments/1000')
+          .expect(404)
+      });
     });
   })
 });
