@@ -199,7 +199,7 @@ describe('/api', () => {
         });
       });
     });
-    describe('/article/:article_id/comments', () => {
+    describe.only('/article/:article_id/comments', () => {
       it('POST returns status 201 and a posted comment with username and body keys ', () => {
         return request(app)
           .post('/api/articles/1/comments')
@@ -212,9 +212,20 @@ describe('/api', () => {
             expect(body.comment.author).to.equal('butter_bridge')
           })
       });
+      it('Error returns status 400 if the post request doesn\'t contain the required keys', () => {
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send({ body: 'I am an angry journalist, hear me roar!' })
+          .expect(400)
+          .then(({ body }) => {
+            console.log(body)
+            expect(body.msg).to.equal('Incorrect input')
+          })
+      });
       it('Error returns status 404 when path is not a valid number', () => {
         return request(app)
           .post('/api/articles/10000/comments')
+          .send({ username: "butter_bridge", body: 'I am an angry journalist, hear me roar!' })
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).to.equal('Article does not exist')

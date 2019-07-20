@@ -19,12 +19,12 @@ exports.getArticleById = (article_id) => {
     })
 }
 
-exports.getArticlePatch = ({ article_id }, { inc_votes }) => {
+exports.getArticlePatch = ({ article_id }, { inc_votes = 0 }) => {
   return connection
     .select('*')
     .from('articles')
     .where('articles.article_id', article_id)
-    .increment('votes', inc_votes || 0)
+    .increment('votes', inc_votes)
     .returning("*")
     .then((article) => {
       if (!article.length) {
