@@ -333,6 +333,18 @@ describe('/api', () => {
           .patch('/api/comments/')
           .send({ inc_votes: 1 })
           .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Page not found')
+          })
+      });
+      it('Error returns 404 when there is no comments id ', () => {
+        return request(app)
+          .patch('/api/comments/1000')
+          .send({ inc_votes: 1 })
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('comment not found')
+          })
       });
       it('Method not allowed: status 405 for /api/comments/1', () => {
         const invalidMethods = ['put', 'post', 'get'];
