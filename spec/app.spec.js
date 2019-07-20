@@ -15,7 +15,7 @@ describe('/api', () => {
       return request(app)
         .get('/bunting')
         .expect(404)
-        .then(res => { expect(res.body.msg).to.equal('page not found') })
+        .then(res => { expect(res.body.msg).to.equal('Page not found') })
     });
 
     describe('/topics', () => {
@@ -38,7 +38,7 @@ describe('/api', () => {
           .get('/api/bunting')
           .expect(404)
           .then(({ body }) => {
-            expect(body.msg).to.equal('page not found')
+            expect(body.msg).to.equal('Page not found')
           })
       });
       it('Method not allowed: status 405 for /topics', () => {
@@ -48,7 +48,7 @@ describe('/api', () => {
           [method]('/api/topics')
             .expect(405)
             .then(({ body }) => {
-              expect(body.msg).to.equal('method not allowed');
+              expect(body.msg).to.equal('Method not allowed');
             });
         });
       });
@@ -79,7 +79,7 @@ describe('/api', () => {
           [method]('/api/users/lurker')
             .expect(405)
             .then(({ body }) => {
-              expect(body.msg).to.equal('method not allowed');
+              expect(body.msg).to.equal('Method not allowed');
             });
         });
       });
@@ -103,7 +103,7 @@ describe('/api', () => {
           .get('/api/articles/bunting')
           .expect(400)
           .then(({ body }) => {
-            expect(body.msg).to.be.equal('bad request');
+            expect(body.msg).to.be.equal('Invalid syntax');
           });
       });
       it('Method not allowed: status 405 for /topics', () => {
@@ -113,7 +113,7 @@ describe('/api', () => {
           [method]('/api/articles')
             .expect(405)
             .then(({ body }) => {
-              expect(body.msg).to.equal('method not allowed');
+              expect(body.msg).to.equal('Method not allowed');
             });
         });
       });
@@ -140,7 +140,7 @@ describe('/api', () => {
           .send({ inc_votes: 1 })
           .expect(400)
           .then(({ body }) => {
-            expect(body.msg).to.be.equal('bad request');
+            expect(body.msg).to.be.equal('Invalid syntax');
           });
       });
       it('Error returns status 400 when inc_votes is not a number', () => {
@@ -149,7 +149,7 @@ describe('/api', () => {
           .send({ inc_votes: 'bunting' })
           .expect(400)
           .then(({ body }) => {
-            expect(body.msg).to.be.equal('bad request');
+            expect(body.msg).to.be.equal('Invalid syntax');
           });
       });
       it('Method not allowed: status 405 for /articles/5', () => {
@@ -159,7 +159,7 @@ describe('/api', () => {
           [method]('/api/articles/5')
             .expect(405)
             .then(({ body }) => {
-              expect(body.msg).to.equal('method not allowed');
+              expect(body.msg).to.equal('Method not allowed');
             });
         });
       });
@@ -199,7 +199,7 @@ describe('/api', () => {
           [method]('/api/articles/1/comments')
             .expect(405)
             .then(({ body }) => {
-              expect(body.msg).to.equal('method not allowed');
+              expect(body.msg).to.equal('Method not allowed');
             });
         });
       });
@@ -229,7 +229,7 @@ describe('/api', () => {
           [method]('/api/articles')
             .expect(405)
             .then(({ body }) => {
-              expect(body.msg).to.equal('method not allowed');
+              expect(body.msg).to.equal('Method not allowed');
             });
         });
       });
@@ -245,14 +245,20 @@ describe('/api', () => {
           .get('/api/articles/bunting')
           .expect(400)
       });
-      it('GET returns 200 when passed a correct path', () => {
-        return request(app)
-          .get('/api/articles?username=butter_bridge')
-          .expect(200)
-          .then(({ body }) => {
-            expect(body.articles[0].author).to.equal('butter_bridge')
-          })
-      });
+      //   it('GET returns 200 when passed a correct query', () => {
+      //     return request(app)
+      //       .get('/api/articles?author=butter_bridge')
+      //       .expect(200)
+      //       .then(({ body }) => {
+      //         console.log(body.articles)
+      //         expect(body.article).to.be.descendingBy('author')
+      //       })
+      // });
+      // it('GET returns 200 when passed a correct query', () => {
+      //   return request(app)
+      //     .get('/api/articles?topics=cats')
+      //     .expect(200)
+      // });
       it('Method not allowed: status 405 for /api/articles?author=butter_bridge', () => {
         const invalidMethods = ['patch', 'put', 'post'];
         invalidMethods.map(method => {
@@ -260,7 +266,7 @@ describe('/api', () => {
           [method]('/api/articles?username=butter_bridge')
             .expect(405)
             .then(({ body }) => {
-              expect(body.msg).to.equal('method not allowed');
+              expect(body.msg).to.equal('Method not allowed');
             });
         });
       });
@@ -297,7 +303,7 @@ describe('/api', () => {
           [method]('/api/comments/1')
             .expect(405)
             .then(({ body }) => {
-              expect(body.msg).to.equal('method not allowed');
+              expect(body.msg).to.equal('Method not allowed');
             });
         });
       });
@@ -312,6 +318,5 @@ describe('/api', () => {
           .expect(400)
       })
     });
-  });
-
+  })
 });

@@ -4,15 +4,19 @@ const { sendArticleComments, sendComment } = require('../controllers/comments-co
 const { methodErrors } = require('../errors/errors')
 
 articleRouter.route('/')
-  .get(sendArticles).all(methodErrors);
+  .get(sendArticles)
+  .all(methodErrors);
 
 
 articleRouter.route('/:article_id')
   .get(sendArticleById)
-  .patch(sendArticlePatch).all(methodErrors);
+  .patch(sendArticlePatch)
+  .all(methodErrors);
 
 articleRouter
   .route('/:article_id/comments')
-  .post(sendArticleComments).get(sendComment).all(methodErrors);
+  .post(sendArticleComments)
+  .get(sendComment)
+  .all(methodErrors);
 
 module.exports = articleRouter;
