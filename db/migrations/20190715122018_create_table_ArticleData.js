@@ -2,12 +2,12 @@
 exports.up = (connection, Promise) => {
   return connection.schema.createTable('articles', (articleData) => {
     articleData.increments('article_id').primary();
-    articleData.string('title');
-    articleData.text('body');
+    articleData.string('title').notNullable();
+    articleData.text('body').notNullable();
     articleData.integer('votes').defaultTo(0);
-    articleData.string('topic').references('topics.slug');
-    articleData.string('author').references('users.username');
-    articleData.timestamp('created_at');
+    articleData.string('topic').references('topics.slug').notNullable();
+    articleData.string('author').references('users.username').notNullable();
+    articleData.timestamp('created_at').defaultTo(connection.fn.now());;
   })
 };
 

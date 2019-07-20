@@ -218,7 +218,6 @@ describe('/api', () => {
           .send({ body: 'I am an angry journalist, hear me roar!' })
           .expect(400)
           .then(({ body }) => {
-            console.log(body)
             expect(body.msg).to.equal('Incorrect input')
           })
       });
@@ -231,15 +230,6 @@ describe('/api', () => {
             expect(body.msg).to.equal('Article does not exist')
           })
       });
-      it('GET returns a status 200 and an array of objects sorted by created_at in descending order', () => {
-        return request(app)
-          .get('/api/articles/1/comments')
-          .expect(200)
-          .then(({ body }) => {
-            expect(body.comment).to.be.sortedBy('created_at', { descending: true })
-          })
-      })
-
       it('Error returns status 404 and an incorrect path ', () => {
         return request(app)
           .post('/api/articles/1/bunting')
@@ -249,7 +239,24 @@ describe('/api', () => {
             expect(body.msg).to.equal('Page not found')
           })
       });
-      //TODO: if id is not a valid number(404), not a number(400), nothing sent(400), too many keys(400) 
+      it('GET returns a status 200 and an array of objects sorted by created_at in descending order', () => {
+        return request(app)
+          .get('/api/articles/1/comments')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comment).to.be.sortedBy('created_at', { descending: true })
+          })
+      })
+
+
+      it('Error returns status 404 when passed an invalid article_id', () => {
+        return request(app)
+          .get('/api/articles/1000')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('page not found')
+          })
+      });
       it('Method not allowed: status 405 for /api/articles/1/comments', () => {
         const invalidMethods = ['patch', 'put'];
         invalidMethods.map(method => {

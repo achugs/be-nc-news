@@ -1,7 +1,7 @@
 exports.up = (connection, Promise) => {
   return connection.schema.createTable('topics', (topicData) => {
     topicData.string('slug').primary();
-    topicData.string('description');
+    topicData.string('description').notNullable();
   })
 };
 
