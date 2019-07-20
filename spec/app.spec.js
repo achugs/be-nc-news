@@ -11,7 +11,7 @@ describe('/api', () => {
   beforeEach(() => connection.seed.run());
   after(() => connection.destroy());
   describe('/*', () => {
-    it('GET returns 404 and a page not founbd when passed an incorrect url', () => {
+    it('GET returns 404 and a page not found when passed an incorrect url', () => {
       return request(app)
         .get('/bunting')
         .expect(404)
@@ -93,9 +93,17 @@ describe('/api', () => {
             expect(body.article.article_id).to.equal(1)
             expect(body.article).to.have.keys('author', 'title', 'article_id',
               'body', 'topic', 'created_at', 'votes', 'comment_count');
-            expect(+body.article.comment_count).to.equal(1)
+            expect(+body.article.comment_count).to.equal(13)
 
           });
+      });
+      it('GET returns status 200 and a correct comment count', () => {
+        return request(app)
+          .get('/api/articles/1')
+          .expect(200)
+          .then(({ body }) => {
+            expect(+body.article.comment_count).to.equal(13)
+          })
       });
       it('Error returns 404 when path is not a valid number', () => {
         return request(app)
@@ -182,7 +190,6 @@ describe('/api', () => {
           .patch('/api/articles/5')
           .expect(400)
           .then(({ body }) => {
-            console.log(body.msg)
             expect(body.msg).to.be.equal('No Body Found...');
           });
       });
@@ -199,7 +206,7 @@ describe('/api', () => {
         });
       });
     });
-    describe.only('/article/:article_id/comments', () => {
+    describe('/article/:article_id/comments', () => {
       it('POST returns status 201 and a posted comment with username and body keys ', () => {
         return request(app)
           .post('/api/articles/1/comments')
