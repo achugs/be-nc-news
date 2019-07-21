@@ -29,9 +29,7 @@ exports.getArticlePatch = ({ article_id }, { inc_votes = 0 }) => {
     .then((article) => {
       if (!article.length) {
         return Promise.reject({ status: 404, msg: 'page not found' });
-      } else {
-        return article[0];
-      }
+      } return article[0];
     })
 }
 

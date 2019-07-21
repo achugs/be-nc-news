@@ -1,4 +1,4 @@
-const { getArticleById, getArticlePatch, getArticles, checkQuery } = require('../models/article-model');
+const { getArticleById, getArticlePatch, getArticles } = require('../models/article-model');
 
 
 exports.sendArticleById = (req, res, next) => {
@@ -25,7 +25,6 @@ exports.sendPostedArticleComments = (req, res, next) => {
 }
 
 exports.sendArticles = (req, res, next) => {
-
   getArticles(req.query)
     .then((articles) => {
       res.status(200).send({ articles })

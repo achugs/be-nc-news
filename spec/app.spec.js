@@ -387,7 +387,22 @@ describe('/api', () => {
             expect(body.msg).to.equal('Not Found!');
           })
       });
-
+      it('GET returns with all articles when filter is invalid', () => {
+        return request(app)
+          .get('/api/articles?invalid=mitch')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles[0]).to.have.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
+          })
+      });
+      it('GET returns with all articles when filter is invalid', () => {
+        return request(app)
+          .get('/api/articles?invalid=butter_bridge')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles[0]).to.have.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
+          })
+      });
       it('Error returns 400 when passed an order that is not ascending or descending', () => {
         return request(app)
           .get('/api/articles?order=invalid&sort_by=topic')
@@ -427,19 +442,6 @@ describe('/api', () => {
           .get('/api/articles/bunting')
           .expect(400)
       });
-      // it('GET returns 200 when passed a correct query', () => {
-      //   return request(app)
-      //     .get('/api/articles?sort_by=author')
-      //     .expect(200)
-      //     .then((res) => {
-      //       expect(res.body.articles[0]).to.be.descendingBy('author');
-      //     })
-      // });
-      // it('GET returns 200 when passed a correct query', () => {
-      //   return request(app)
-      //     .get('/api/articles?topics=cats')
-      //     .expect(200)
-      // });
 
       it('Method not allowed: status 405 for /api/articles?author=butter_bridge', () => {
         const invalidMethods = ['patch', 'put', 'post'];
