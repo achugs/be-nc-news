@@ -371,6 +371,23 @@ describe('/api', () => {
             expect(body.articles[0].topic).to.equal('mitch')
           })
       });
+      it('Error status 404 when an author doesn\'t exist', () => {
+        return request(app)
+          .get('/api/articles?author=invalid')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Not Found!');
+          })
+      });
+      it('Error status 404 when a topic doesn\'t exist', () => {
+        return request(app)
+          .get('/api/articles?topic=invalid')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Not Found!');
+          })
+      });
+
       it('Error returns 400 when passed an order that is not ascending or descending', () => {
         return request(app)
           .get('/api/articles?order=invalid&sort_by=topic')

@@ -47,18 +47,9 @@ exports.getArticles = ({ sort_by = 'created_at', order = 'desc', author, topic }
     .modify(query => {
       if (author) query.where({ 'articles.author': author });
       if (topic) query.where({ 'articles.topic': topic });
-    })
-
-}
-
-// exports.checkQuery = (query, column) => {
-//   return connection.select('*').from('articles').where(column, query)
-//     .then((row) => {
-//       if (row.length === 0) return false;
-//       return true;
-//     })
-// }
-
-
-
-
+    }).then(articles => {
+      if (!articles.length && (topic || author))
+        return Promise.reject({ status: 404, msg: 'Not Found!' });
+      return articles;
+    });
+};
