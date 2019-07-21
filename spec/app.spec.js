@@ -204,7 +204,7 @@ describe('/api', () => {
         });
       });
     });
-    describe.only('/article/:article_id/comments', () => {
+    describe('/article/:article_id/comments', () => {
       it('POST returns status 201 and a posted comment with username and body keys ', () => {
         return request(app)
           .post('/api/articles/1/comments')
@@ -314,7 +314,7 @@ describe('/api', () => {
       });
     });
 
-    describe('/api/articles', () => {
+    describe.only('/api/articles', () => {
       it('GET returns 200 and an articles array of article objects author, title, article_id,topic,created_at, votes and comment_count', () => {
         return request(app)
           .get('/api/articles')
@@ -328,7 +328,16 @@ describe('/api', () => {
           .get('/api/articles')
           .expect(200)
           .then((res) => {
-            expect(res.body.articles).to.be.sortedBy('created_at', { descending: true })
+            expect(res.body.articles).to.be.descendingBy('created_at')
+          })
+      });
+      it('GET returns 200 and an array of objects sorted by created_at in ascending order', () => {
+        return request(app)
+          .get('/api/articles?order=asc')
+          .expect(200)
+          .then((res) => {
+            console.log(res.body.articles)
+            expect(res.body.articles).to.be.ascendingBy('created_at')
           })
       });
       it('Method not allowed: status 405 for /api/articles', () => {
@@ -354,15 +363,14 @@ describe('/api', () => {
           .get('/api/articles/bunting')
           .expect(400)
       });
-      it('GET returns 200 when passed a correct query', () => {
-        return request(app)
-          .get('/api/articles?sort_by=author')
-          .expect(200)
-          .then(({ body }) => {
-            console.log(body.articles)
-            expect(body.articles[0]).to.descendingBy('author')
-          })
-      });
+      // it('GET returns 200 when passed a correct query', () => {
+      //   return request(app)
+      //     .get('/api/articles?sort_by=author')
+      //     .expect(200)
+      //     .then((res) => {
+      //       expect(res.body.articles[0]).to.be.descendingBy('author');
+      //     })
+      // });
       // it('GET returns 200 when passed a correct query', () => {
       //   return request(app)
       //     .get('/api/articles?topics=cats')

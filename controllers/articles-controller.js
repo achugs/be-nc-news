@@ -25,30 +25,9 @@ exports.sendPostedArticleComments = (req, res, next) => {
 }
 
 exports.sendArticles = (req, res, next) => {
-  //   const { sort_by, order, author, topic } = req.query;
 
-  //   const sortedByOrder = ['asc', 'desc'].includes(order)
-  //   const sortby = ['author', 'title', 'article_id', 'topic', 'created_at', 'votes'].includes(sort_by)
-  //   if (order && !sortedByOrder) { next({ msg: 'page not found', status: 400 }) };
-  //   if (sort_by && !sortby) { next({ msg: 'page not found', status: 400 }) }
-  //   else {
-  getArticles(req.params, req.query)
+  getArticles(req.query)
     .then((articles) => {
-
-      //         const auth = author !== undefined ? checkQuery(author, 'users', 'username') : null;
-      //         const top = topic !== undefined ? checkQuery(topic, 'articles', 'topic') : null;
-
-      //         return Promise.all([auth, top, articles])
-      //           .then(([auth, top, articles]) => {
-      //             if (auth === false) return Promise.reject({ msg: 'page not found', status: 404 });
-      //             else if (top === false) return Promise.reject({ msg: 'page not found', status: 404 });
-      //             else return res.status(200).send({ articles })
-      //           })
       res.status(200).send({ articles })
     }).catch(next)
-  // }
-
-
-
-
 }
