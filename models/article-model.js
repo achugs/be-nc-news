@@ -35,7 +35,7 @@ exports.getArticlePatch = ({ article_id }, { inc_votes = 0 }) => {
     })
 }
 
-exports.getArticles = ({ sort_by = 'created_at', order = 'desc' }) => {
+exports.getArticles = ({ sort_by = 'created_at', order = 'desc', author, topic }) => {
   if (order !== 'desc' && order !== 'asc') return Promise.reject({ status: 400, msg: 'Invalid query' })
   return connection
     .select('articles.author', 'title', 'articles.article_id', 'topic', 'articles.created_at', 'articles.votes')
@@ -44,11 +44,10 @@ exports.getArticles = ({ sort_by = 'created_at', order = 'desc' }) => {
     .leftJoin('comments', 'articles.article_id', 'comments.article_id')
     .groupBy('articles.article_id')
     .orderBy(sort_by, order)
-    .returning('*');
-  // .modify(query => {
-  //   if (author) query.where({ 'articles.author': author });
-  //   if (topic) query.where({ 'articles.topic': topic });
-  // })
+    .modify(query => {
+      if (author) query.where({ 'articles.author': author });
+      if (topic) query.where({ 'articles.topic': topic });
+    })
 
 }
 

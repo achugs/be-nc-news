@@ -355,6 +355,38 @@ describe('/api', () => {
             expect(body.articles).to.be.ascendingBy('topic')
           })
       });
+      it('GET returns 200 and an array of objects that has the same author', () => {
+        return request(app)
+          .get('/api/articles?author=butter_bridge')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles[0].author).to.equal('butter_bridge')
+          })
+      });
+      it('GET returns 200 and an array of mitch topics', () => {
+        return request(app)
+          .get('/api/articles?topic=mitch')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles[0].topic).to.equal('mitch')
+          })
+      });
+      it('Error returns 400 when passed an order that is not ascending or descending', () => {
+        return request(app)
+          .get('/api/articles?order=invalid&sort_by=topic')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Invalid query')
+          })
+      });
+      it('Error returns 400 when sort_by is invalid', () => {
+        return request(app)
+          .get('/api/articles?order=asc&sort_by=invalid')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Column not found')
+          })
+      });
       it('Method not allowed: status 405 for /api/articles', () => {
         const invalidMethods = ['patch', 'put', 'post'];
         invalidMethods.map(method => {
