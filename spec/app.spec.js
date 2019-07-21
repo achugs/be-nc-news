@@ -327,17 +327,32 @@ describe('/api', () => {
         return request(app)
           .get('/api/articles')
           .expect(200)
-          .then((res) => {
-            expect(res.body.articles).to.be.descendingBy('created_at')
+          .then(({ body }) => {
+            expect(body.articles).to.be.descendingBy('created_at')
           })
       });
       it('GET returns 200 and an array of objects sorted by created_at in ascending order', () => {
         return request(app)
           .get('/api/articles?order=asc')
           .expect(200)
-          .then((res) => {
-            console.log(res.body.articles)
-            expect(res.body.articles).to.be.ascendingBy('created_at')
+          .then(({ body }) => {
+            expect(body.articles).to.be.ascendingBy('created_at')
+          })
+      });
+      it('GET returns 200 and an array of objects sorted by author in ascending order', () => {
+        return request(app)
+          .get('/api/articles?order=asc&sort_by=author')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles).to.be.ascendingBy('author')
+          })
+      });
+      it('GET returns 200 and an array of objects sorted by topic in ascending order', () => {
+        return request(app)
+          .get('/api/articles?order=asc&sort_by=topic')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles).to.be.ascendingBy('topic')
           })
       });
       it('Method not allowed: status 405 for /api/articles', () => {
