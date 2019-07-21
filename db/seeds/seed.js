@@ -14,7 +14,6 @@ exports.seed = function (connection) {
     return Promise.all([topicsInsertions, usersInsertions])
       .then(() => {
         const newDate = formatDates(articleData);
-
         return connection.insert(newDate).into('articles').returning('*');
       })
   })
