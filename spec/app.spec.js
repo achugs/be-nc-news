@@ -93,8 +93,6 @@ describe('/api', () => {
             expect(body.article.article_id).to.equal(1)
             expect(body.article).to.have.keys('author', 'title', 'article_id',
               'body', 'topic', 'created_at', 'votes', 'comment_count');
-            expect(+body.article.comment_count).to.equal(13)
-
           });
       });
       it('GET returns status 200 and a correct comment count', () => {
