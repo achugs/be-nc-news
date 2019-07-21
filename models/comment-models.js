@@ -8,13 +8,14 @@ exports.postArticleComments = (comments) => {
     .then((comment) => comment[0]);
 };
 
-exports.getCommentsById = ({ article_id }, { sort_by, order }) => {
+exports.getCommentsById = ({ article_id }, { sort_by = 'created_at', order = 'desc' }) => {
+  if (order !== 'desc' && order !== 'asc') return Promise.reject({ status: 400, msg: 'Invalid query' });
   return connection
     .select('comment_id', 'votes', 'created_at', 'author', 'body')
     .from('comments')
     .where('comments.article_id', article_id)
-    .orderBy(sort_by || 'created_at', order || 'desc')
-    .returning('*')
+    .orderBy(sort_by, order)
+
 }
 
 exports.patchComments = ({ comment_id }, { inc_votes }) => {

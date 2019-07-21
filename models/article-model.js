@@ -36,28 +36,29 @@ exports.getArticlePatch = ({ article_id }, { inc_votes = 0 }) => {
 }
 
 exports.getArticles = ({ sort_by = 'created_at', order = 'desc', author, topic }) => {
+  if (order !== 'asc' && order !== 'desc') return Promise.reject({ status: 400, message: 'invalid query' })
   return connection
     .select('articles.author', 'title', 'articles.article_id', 'topic', 'articles.created_at', 'articles.votes')
     .from('articles')
-    .count({ comment_count: 'comments.article_id' })
+    .count({ comment_count: 'comments.comment_id' })
     .leftJoin('comments', 'articles.article_id', 'comments.article_id')
     .groupBy('articles.article_id')
-    .orderBy(sort_by, order)
-    .modify(query => {
-      if (author) query.where({ 'articles.author': author });
-      if (topic) query.where({ 'articles.topic': topic });
-    })
+    .orderBy(sort_by, order).returning('*')
+  // .modify(query => {
+  //   if (author) query.where({ 'articles.author': author });
+  //   if (topic) query.where({ 'articles.topic': topic });
+  // })
 
 
 }
 
-exports.checkQuery = (query, column) => {
-  return connection.select('*').from('articles').where(column, query)
-    .then((row) => {
-      if (row.length === 0) return false;
-      return true;
-    })
-}
+// exports.checkQuery = (query, column) => {
+//   return connection.select('*').from('articles').where(column, query)
+//     .then((row) => {
+//       if (row.length === 0) return false;
+//       return true;
+//     })
+// }
 
 
 

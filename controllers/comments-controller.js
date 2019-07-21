@@ -17,8 +17,9 @@ exports.sendArticleComments = (req, res, next) => {
 
 exports.sendComment = (req, res, next) => {
   getCommentsById(req.params, req.query)
-    .then(comment => res.status(200)
-      .send({ comment }))
+    .then((comments) => {
+      res.status(200).send({ comments })
+    })
     .catch(next)
 }
 

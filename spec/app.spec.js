@@ -204,7 +204,7 @@ describe('/api', () => {
         });
       });
     });
-    describe('/article/:article_id/comments', () => {
+    describe.only('/article/:article_id/comments', () => {
       it('POST returns status 201 and a posted comment with username and body keys ', () => {
         return request(app)
           .post('/api/articles/1/comments')
@@ -249,10 +249,49 @@ describe('/api', () => {
           .get('/api/articles/1/comments')
           .expect(200)
           .then(({ body }) => {
-            expect(body.comment).to.be.sortedBy('created_at', { descending: true })
+            expect(body.comments).to.descendingBy('created_at')
           })
       })
-
+      it('GET returns status 200 and sorts by comment id', () => {
+        return request(app)
+          .get('/api/articles/1/comments?sort_by=comment_id')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments).to.descendingBy('comment_id');
+          })
+      });
+      it('GET returns status 200 and orders by ascending ', () => {
+        return request(app)
+          .get('/api/articles/1/comments?order=asc')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments).to.be.ascendingBy('created_at');
+          })
+      });
+      it('GET returns status 200 and uses both sort_by and order', () => {
+        return request(app)
+          .get('/api/articles/1/comments?order=asc&sort_by=comment_id')
+          .expect(200)
+          .then(({ body: { comments } }) => {
+            expect(comments).to.be.ascendingBy('comment_id');
+          })
+      });
+      it('Error returns status 400 when order is not ascending or descending', () => {
+        return request(app)
+          .get('/api/articles/1/comments?order=invalid')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Invalid query');
+          })
+      });
+      it('Error returns 400 when comments using sort_by is invalid', () => {
+        return request(app)
+          .get('/api/articles/1/comments?sort_by=invalid')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal('Column not found');
+          })
+      });
 
       it('Error returns status 404 when passed an invalid article_id', () => {
         return request(app)
@@ -275,7 +314,7 @@ describe('/api', () => {
       });
     });
 
-    describe('/api/article', () => {
+    describe('/api/articles', () => {
       it('GET returns 200 and an articles array of article objects author, title, article_id,topic,created_at, votes and comment_count', () => {
         return request(app)
           .get('/api/articles')
@@ -315,20 +354,21 @@ describe('/api', () => {
           .get('/api/articles/bunting')
           .expect(400)
       });
-      //   it('GET returns 200 when passed a correct query', () => {
-      //     return request(app)
-      //       .get('/api/articles?author=butter_bridge')
-      //       .expect(200)
-      //       .then(({ body }) => {
-      //         console.log(body.articles)
-      //         expect(body.article).to.be.descendingBy('author')
-      //       })
-      // });
+      it('GET returns 200 when passed a correct query', () => {
+        return request(app)
+          .get('/api/articles?sort_by=author')
+          .expect(200)
+          .then(({ body }) => {
+            console.log(body.articles)
+            expect(body.articles[0]).to.descendingBy('author')
+          })
+      });
       // it('GET returns 200 when passed a correct query', () => {
       //   return request(app)
       //     .get('/api/articles?topics=cats')
       //     .expect(200)
       // });
+
       it('Method not allowed: status 405 for /api/articles?author=butter_bridge', () => {
         const invalidMethods = ['patch', 'put', 'post'];
         invalidMethods.map(method => {
