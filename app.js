@@ -6,7 +6,7 @@ const { routeError, psqlError, serverError, customError, methodErrors } = requir
 
 app.use(express.json());
 
-app.use('/api', apiRouter)
+app.use('/api', apiRouter).all(methodErrors);
 
 app.all('/*', routeError)
 

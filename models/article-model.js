@@ -9,11 +9,9 @@ exports.getArticleById = (article_id) => {
     .groupBy('articles.article_id')
     .where('articles.article_id', article_id)
     .then(article => {
-      // console.log(!article, 'article?');
       if (!article) {
         return Promise.reject({ status: 404, msg: 'page not found' });
       } else {
-        // console.log(article, 'model')
         return article
       }
     })
