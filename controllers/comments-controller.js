@@ -1,6 +1,6 @@
 const { postArticleComments, getCommentsById, patchComments, deletedComment } = require('../models/comment-models');
 
-exports.sendArticleComments = (req, res, next) => {
+exports.sendPostedArticleComments = (req, res, next) => {
   const addComment = req.body;
   const { article_id } = req.params;
   const { username, body } = addComment;

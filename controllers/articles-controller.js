@@ -18,12 +18,6 @@ exports.sendArticlePatch = (req, res, next) => {
   }
 }
 
-exports.sendPostedArticleComments = (req, res, next) => {
-  getPostedArticleComments(req.params, req.body).then((comments) => {
-    res.status(201).send({ comments })
-  }).catch(next)
-}
-
 exports.sendArticles = (req, res, next) => {
   getArticles(req.query)
     .then((articles) => {

@@ -1,6 +1,6 @@
 const articleRouter = require('express').Router();
 const { sendArticleById, sendArticlePatch, sendArticles } = require('../controllers/articles-controller');
-const { sendArticleComments, sendComment } = require('../controllers/comments-controller');
+const { sendPostedArticleComments, sendComment } = require('../controllers/comments-controller');
 const { methodErrors } = require('../errors/errors')
 
 articleRouter.route('/')
@@ -15,7 +15,7 @@ articleRouter.route('/:article_id')
 
 articleRouter
   .route('/:article_id/comments')
-  .post(sendArticleComments)
+  .post(sendPostedArticleComments)
   .get(sendComment)
   .all(methodErrors);
 
