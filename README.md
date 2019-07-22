@@ -34,7 +34,7 @@ git remote add origin <YOUR-GITHUB-URL>
 ## Step 2 - Setting up your project
 In this repo there is no Knex file. You will need to create your own and add it to `.gitignore`. If you are on linux insert your postgres username and password into the knexfile. 
 
-#### Creating your Knex file
+#### Creating your knexfile.js
 ```
 const ENV = process.env.NODE_ENV || 'development';
 const { DB_URL } = process.env;
@@ -56,9 +56,6 @@ const customConfig = {
       password: password
     }
   },
-  production: {
-    connection: `${DB_URL}?ssl=true`,
-  },
   test: {
     connection: {
       database: 'nc_news_test',
@@ -72,9 +69,41 @@ module.exports = { ...customConfig[ENV], ...baseConfig };
 ```
 You have also been provided with a `db` folder with some data, a [setup.sql](./db/setup.sql) file, a `seeds` folder and a `utils` folder. You should also take a minute to familiarise yourself with the npm scripts you have been provided.
 
-### Prerequisites
+The job of `index.js` in each the data folders is to export out all the data from that folder. Three `index.js` files have been created for you. This is so that, when you need access to the data elsewhere, there is one convenient require statement - to the index file, rather than having to require each file individually. These index files can be found in `db/data`, `db/data/development-data` and `db/data/test-data`
 
-### Installing
+The job of the `db/index.js` file will be to export out of the db folder _only the data relevant to the current environment_. Specifically this file should allow your seed file to access only a specific set of data depending on the environment it's in: test, development or production. 
+
+## Step 3 - Migrations and Seeding
+
+Your seed file should now be set up to require in either test or dev data depending on the environment.
+
+Migrations have been created and seed functions provided.
+
+## Dependencies
+
+#### Dependencies
+
+  ```
+    "express": "^4.17.1",
+    "knex": "^0.19.0",
+    "pg": "^7.11.0"
+```
+
+#### Developer Dependencies
+
+  ```
+    "chai": "^4.2.0",
+    "chai-sorted": "^0.2.0",
+    "mocha": "^6.1.4",
+    "supertest": "^4.0.2"
+  ```
+
+To install all dependencies:
+
+```bash
+npm install
+```
+
 
 ## Running the tests
 
