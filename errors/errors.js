@@ -11,7 +11,8 @@ exports.psqlError = (err, req, res, next) => {
     "22P02": { status: 400, msg: "Invalid syntax" },
     "23503": { status: 404, msg: "Article does not exist" },
     "42703": { status: 400, msg: "Column not found" },
-    "23502": { status: 400, msg: "Incorrect input" }
+    "23502": { status: 400, msg: "Incorrect input" },
+    "42803": { status: 404, msg: "invalid article_id" }
 
   };
   if (badRequestCode[err.code])

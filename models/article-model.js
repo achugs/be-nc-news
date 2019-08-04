@@ -1,28 +1,31 @@
 const connection = require('../db/connection');
 
 exports.getArticleById = (article_id) => {
+
+
   return connection
-    .first('articles.*')
+    .select('articles.*')
     .count({ comment_count: 'comments.comment_id' })
     .from('articles')
     .leftJoin('comments', 'articles.article_id', 'comments.article_id')
     .groupBy('articles.article_id')
     .where('articles.article_id', article_id)
-    .then(article => {
-      if (!article) {
+    .then((article) => {
+      if (!article.length) {
         return Promise.reject({ status: 404, msg: 'page not found' });
-      } else {
-        return article
+      }
+      else {
+        return article[0]
       }
     })
 }
 
-exports.getArticlePatch = ({ article_id }, { inc_votes = 0 }) => {
+exports.getArticlePatch = ({ article_id }, { inc_votes }) => {
   return connection
     .select('*')
     .from('articles')
     .where('articles.article_id', article_id)
-    .increment('votes', inc_votes)
+    .increment('votes', inc_votes || 0)
     .returning("*")
     .then((article) => {
       if (!article.length) {
