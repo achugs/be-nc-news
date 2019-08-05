@@ -124,7 +124,8 @@ npm run seed
 ```
 ## Testing for each endpoint
 
-```/api/topics:
+```
+/api/topics:
 
 GET: Returns an array of topic objects with correct properties.
 ```
