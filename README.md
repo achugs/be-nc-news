@@ -124,30 +124,42 @@ npm run seed
 ```
 ## Testing for each endpoint
 
-/api/topics:
+```/api/topics:
+
 GET: Returns an array of topic objects with correct properties.
-
+```
+```
 /api/users/:username:
-GET: Returns an object of the passed user with the correct properties in relation to the username. 
 
+GET: Returns an object of the passed user with the correct properties in relation to the username. 
+```
+
+```
 /api/articles/:article_id:
+
 GET: Returns an article object with correct properties in relation to the articles id number.
 PATCH: The article can have its votes updated when passed an object of inc_votes and valid number.
-
+```
+```
 /api/articles/:article_id/comments:
+
 GET: Returns all of a specific articles comments by passing it into the url. 
 POST: Tested that a new comment can be posted to a specified article.
-
+```
+```
 /api/articles:
-GET: Returns an array of articles objects with the correct properties. This endpoint can use queries such as author, topic, sort_by and order.
 
+GET: Returns an array of articles objects with the correct properties. This endpoint can use queries such as author, topic, sort_by and order.
+```
+```
 /api/comments/:comment_id:
 GET: Returns an object with the correct properties in relation to the comments id number.
 PATCH: The comment can have its votes updated when passed an object of inc_votes and valid number. 
-
+```
+```
 /api/comments/:comment_id:
 DELETE: Tested to ensure we can delete a comment by passing its ID. 
-
+```
 
 ## Deployment
 
