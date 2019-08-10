@@ -166,7 +166,7 @@ DELETE: Tested to ensure we can delete a comment by passing its ID.
 
 See the hosting.md file for guidance.
 
-## Versioning
+## Version
 1.0
 
 ## Authors
